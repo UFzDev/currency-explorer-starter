@@ -37,7 +37,7 @@ async function convertirMoneda() {
   if (monedaOrigen === monedaDestino) {
     mostrarError("Elige monedas diferentes para convertir.");
     return;
-  } 
+  }
 
   const url = `https://api.frankfurter.dev/v2/rate/${monedaOrigen}/${monedaDestino}`;
 
@@ -65,7 +65,10 @@ function intercambiarMonedas() {
   // 1) guardar temporalmente el valor de origen
   // 2) intercambiar origen.value y destino.value
   // 3) volver a calcular
-  mostrarError("Misión 06 pendiente: implementa el intercambio de monedas.");
+  const temp = origen.value;
+  origen.value = destino.value;
+  destino.value = temp;
+  convertirMoneda();
 }
 
 // 4. UTILIDADES DE INTERFAZ

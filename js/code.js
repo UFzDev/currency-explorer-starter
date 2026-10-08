@@ -34,6 +34,11 @@ async function convertirMoneda() {
   const monedaOrigen = origen.value;
   const monedaDestino = destino.value;
 
+  if (monedaOrigen === monedaDestino) {
+    mostrarError("Elige monedas diferentes para convertir.");
+    return;
+  } 
+
   const url = `https://api.frankfurter.dev/v2/rate/${monedaOrigen}/${monedaDestino}`;
 
   try {

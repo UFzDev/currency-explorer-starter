@@ -25,8 +25,8 @@ async function convertirMoneda() {
   const valor = Number(cantidad.value);
 
   // TODO · MISIÓN 07: sustituir esta validación mínima por una validación completa.
-  if (!Number.isFinite(valor) || valor <= 0) {
-    mostrarError("Escribe una cantidad mayor que cero.");
+  if (isNaN(valor) || !Number.isFinite(valor) || valor <= 0) {
+    mostrarError("Escribe una cantidad valida");
     return;
   }
 

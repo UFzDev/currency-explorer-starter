@@ -43,6 +43,8 @@ async function convertirMoneda() {
 
   try {
     // TODO · MISIÓN 08: activar un estado visual de carga antes de consultar.
+    activarEstadoCarga(true);
+
     const respuesta = await fetch(url);
 
     // TODO · MISIÓN 09: comprobar response.ok y lanzar un error si corresponde.
@@ -57,6 +59,8 @@ async function convertirMoneda() {
     // TODO · MISIÓN 09: mejora el mensaje y analiza qué errores pueden llegar aquí.
     mostrarError("No fue posible completar la consulta.");
     console.error(error);
+  } finally {
+    activarEstadoCarga(false);
   }
 }
 
@@ -72,6 +76,11 @@ function intercambiarMonedas() {
 }
 
 // 4. UTILIDADES DE INTERFAZ
+function activarEstadoCarga(cargando) {
+  btnConvertir.disabled = cargando;
+  btnConvertir.textContent = cargando ? "Consultando..." : "Convertir";
+}
+
 function mostrarError(mensaje) {
   resultado.classList.add("error");
   resultadoTexto.textContent = mensaje;

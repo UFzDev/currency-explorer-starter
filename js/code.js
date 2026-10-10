@@ -16,6 +16,21 @@ const detalleTasa = document.querySelector("#detalleTasa");
 // 2. EVENTOS
 btnConvertir.addEventListener("click", convertirMoneda);
 btnIntercambiar.addEventListener("click", intercambiarMonedas);
+cantidad.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    convertirMoneda();
+  }
+});
+origen.addEventListener("change", () => {
+  if (cantidad.value && Number(cantidad.value) > 0) {
+    convertirMoneda();
+  }
+});
+destino.addEventListener("change", () => {
+  if (cantidad.value && Number(cantidad.value) > 0) {
+    convertirMoneda();
+  }
+});
 
 // 3. FUNCIÓN PRINCIPAL
 async function convertirMoneda() {
@@ -94,6 +109,7 @@ function intercambiarMonedas() {
 // 4. UTILIDADES DE INTERFAZ
 function activarEstadoCarga(cargando) {
   btnConvertir.disabled = cargando;
+  btnIntercambiar.disabled = cargando;
   btnConvertir.textContent = cargando ? "Consultando..." : "Convertir";
 }
 

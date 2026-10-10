@@ -47,8 +47,16 @@ async function convertirMoneda() {
 
     const respuesta = await fetch(url);
 
+    if (!respuesta.ok) {
+      throw new Error(`Error HTTP: ${respuesta.status}`);
+    }
+
     // TODO · MISIÓN 09: comprobar response.ok y lanzar un error si corresponde.
     const datos = await respuesta.json();
+
+    if (!Number.isFinite(datos.rate)) {
+      throw new Error("La API no devolvió una tasa válida.");
+    }
 
     const conversion = valor * datos.rate;
 
@@ -57,7 +65,15 @@ async function convertirMoneda() {
     detalleTasa.textContent = `1 ${monedaOrigen} = ${datos.rate} ${monedaDestino} · ${datos.date}`;
   } catch (error) {
     // TODO · MISIÓN 09: mejora el mensaje y analiza qué errores pueden llegar aquí.
-    mostrarError("No fue posible completar la consulta.");
+    if (!navigator.onLine) {
+      mostrarError("No hay conexión a Internet.");
+    } else if (error.name === "TypeError") {
+      mostrarError("No fue posible conectar con el servicio.");
+    } else if (error.message.startsWith("Error HTTP")) {
+      mostrarError("No se pudo obtener la tasa para esas monedas.");
+    } else {
+      mostrarError(error.message || "No fue posible completar la consulta.");
+    }
     console.error(error);
   } finally {
     activarEstadoCarga(false);

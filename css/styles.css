@@ -180,6 +180,52 @@ select:focus {
   border-left-color: #b56b13;
 }
 
+.history-panel {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.history-panel h2 {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.secondary {
+  width: 100%;
+  border: 1px solid var(--teal);
+  border-radius: 11px;
+  padding: 12px 18px;
+  background: white;
+  color: var(--teal-dark);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.history-message {
+  margin: 14px 0 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.chart-container {
+  width: 100%;
+  height: 280px;
+  position: relative;
+}
+
 .footer-note {
   text-align: center;
   padding: 0 20px 22px;
@@ -205,5 +251,9 @@ select:focus {
 
   .field label {
     font-size: 0.72rem;
+  }
+
+  .date-grid {
+    grid-template-columns: 1fr;
   }
 }

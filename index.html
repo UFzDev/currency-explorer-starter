@@ -69,6 +69,32 @@
               >La tasa se obtendrá al presionar Convertir.</small
             >
           </section>
+
+          <section class="history-panel" aria-labelledby="history-title">
+            <h2 id="history-title">Evolución de la tasa</h2>
+            <div class="date-grid">
+              <div class="field">
+                <label for="fechaInicio">Desde</label>
+                <input type="date" id="fechaInicio" />
+              </div>
+              <div class="field">
+                <label for="fechaFin">Hasta</label>
+                <input type="date" id="fechaFin" />
+              </div>
+            </div>
+            <button id="consultarHistorico" class="secondary" type="button">
+              Ver evolución
+            </button>
+            <p id="historicoMensaje" class="history-message" aria-live="polite">
+              Selecciona un rango de fechas para ver la evolución.
+            </p>
+            <div class="chart-container">
+              <canvas
+                id="grafica"
+                aria-label="Gráfica de evolución de la tasa"
+              ></canvas>
+            </div>
+          </section>
         </section>
 
         <footer class="footer-note">
@@ -76,6 +102,7 @@
         </footer>
       </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/code.js"></script>
   </body>
 </html>

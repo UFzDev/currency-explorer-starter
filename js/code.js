@@ -12,6 +12,11 @@ const btnIntercambiar = document.querySelector("#intercambiar");
 const resultado = document.querySelector("#resultado");
 const resultadoTexto = document.querySelector("#resultadoTexto");
 const detalleTasa = document.querySelector("#detalleTasa");
+const fechaInicio = document.querySelector("#fechaInicio");
+const fechaFin = document.querySelector("#fechaFin");
+const btnHistorico = document.querySelector("#consultarHistorico");
+const historicoMensaje = document.querySelector("#historicoMensaje");
+const grafica = document.querySelector("#grafica");
 
 // 2. EVENTOS
 btnConvertir.addEventListener("click", convertirMoneda);
@@ -31,6 +36,14 @@ destino.addEventListener("change", () => {
     convertirMoneda();
   }
 });
+
+btnHistorico.addEventListener("click", consultarHistorico);
+
+const hoy = new Date();
+const semanaPasada = new Date(hoy);
+semanaPasada.setDate(hoy.getDate() - 7);
+fechaFin.value = formatearFecha(hoy);
+fechaInicio.value = formatearFecha(semanaPasada);
 
 // 3. FUNCIÓN PRINCIPAL
 async function convertirMoneda() {
@@ -117,6 +130,77 @@ function mostrarError(mensaje) {
   resultado.classList.add("error");
   resultadoTexto.textContent = mensaje;
   detalleTasa.textContent = "Revisa los datos e inténtalo nuevamente.";
+}
+
+async function consultarHistorico() {
+  const de = origen.value;
+  const a = destino.value;
+
+  if (de === a || !fechaInicio.value || !fechaFin.value || fechaInicio.value > fechaFin.value) {
+    mostrarMensajeHistorico("Revisa las monedas y las fechas.");
+    return;
+  }
+
+  const url = `https://api.frankfurter.dev/v1/${fechaInicio.value}..${fechaFin.value}?base=${de}&symbols=${a}`;
+  btnHistorico.disabled = true;
+  btnHistorico.textContent = "Consultando...";
+
+  try {
+    const datos = await (await fetch(url)).json();
+    const fechas = Object.keys(datos.rates).sort();
+    const tasas = fechas.map((fecha) => datos.rates[fecha][a]);
+
+    if (!fechas.length) throw new Error("Sin datos");
+
+    dibujarGrafica(fechas, tasas, de, a);
+    mostrarMensajeHistorico(`${fechas.length} tasas encontradas.`);
+  } catch (error) {
+    console.error(error);
+    mostrarMensajeHistorico("No fue posible obtener la evolución de la tasa.");
+  } finally {
+    btnHistorico.disabled = false;
+    btnHistorico.textContent = "Ver evolución";
+  }
+}
+
+let miGrafica;
+
+function dibujarGrafica(fechas, tasas, monedaOrigen, monedaDestino) {
+  miGrafica?.destroy();
+
+  miGrafica = new Chart(grafica, {
+    type: "line",
+    data: {
+      labels: fechas,
+      datasets: [{
+        label: `1 ${monedaOrigen} = ${monedaDestino}`,
+        data: tasas,
+        borderColor: "#16758b",
+        backgroundColor: "rgba(22, 117, 139, 0.12)",
+        borderWidth: 3,
+        tension: 0.3,
+        fill: true,
+      }],
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        x: { title: { display: true, text: "Fecha" } },
+        y: { title: { display: true, text: "Tasa de cambio" } },
+      },
+    },
+  });
+}
+
+function mostrarMensajeHistorico(mensaje) {
+  historicoMensaje.textContent = mensaje;
+}
+
+function formatearFecha(fecha) {
+  const año = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+  const dia = String(fecha.getDate()).padStart(2, "0");
+  return `${año}-${mes}-${dia}`;
 }
 
 // PISTA PARA EL RETO:

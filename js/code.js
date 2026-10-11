@@ -26,16 +26,14 @@ cantidad.addEventListener("keydown", (e) => {
     convertirMoneda();
   }
 });
-origen.addEventListener("change", () => {
+origen.addEventListener("change", actualizarConversionPorCambioDeMoneda);
+destino.addEventListener("change", actualizarConversionPorCambioDeMoneda);
+
+function actualizarConversionPorCambioDeMoneda() {
   if (cantidad.value && Number(cantidad.value) > 0) {
     convertirMoneda();
   }
-});
-destino.addEventListener("change", () => {
-  if (cantidad.value && Number(cantidad.value) > 0) {
-    convertirMoneda();
-  }
-});
+}
 
 btnHistorico.addEventListener("click", consultarHistorico);
 
@@ -146,17 +144,41 @@ async function consultarHistorico() {
   btnHistorico.textContent = "Consultando...";
 
   try {
-    const datos = await (await fetch(url)).json();
-    const fechas = Object.keys(datos.rates).sort();
-    const tasas = fechas.map((fecha) => datos.rates[fecha][a]);
+    const respuesta = await fetch(url);
 
-    if (!fechas.length) throw new Error("Sin datos");
+    if (!respuesta.ok) {
+      throw new Error(`Error HTTP: ${respuesta.status}`);
+    }
+
+    const datos = await respuesta.json();
+
+    if (!datos || !datos.rates || typeof datos.rates !== "object") {
+      throw new Error("La API no devolvió datos históricos válidos.");
+    }
+
+    const fechas = Object.keys(datos.rates).sort();
+    const tasas = fechas.map((fecha) => {
+      const tasaDelDia = datos.rates[fecha];
+      return tasaDelDia ? tasaDelDia[a] : NaN;
+    });
+
+    if (!fechas.length || tasas.some((tasa) => !Number.isFinite(tasa))) {
+      throw new Error("La API no devolvió tasas históricas válidas.");
+    }
 
     dibujarGrafica(fechas, tasas, de, a);
     mostrarMensajeHistorico(`${fechas.length} tasas encontradas.`);
   } catch (error) {
     console.error(error);
-    mostrarMensajeHistorico("No fue posible obtener la evolución de la tasa.");
+    if (!navigator.onLine) {
+      mostrarMensajeHistorico("No hay conexión a Internet.");
+    } else if (error.name === "TypeError") {
+      mostrarMensajeHistorico("No fue posible conectar con el servicio.");
+    } else if (error.message.startsWith("Error HTTP")) {
+      mostrarMensajeHistorico("No se pudo obtener el histórico para esas monedas.");
+    } else {
+      mostrarMensajeHistorico("No fue posible obtener la evolución de la tasa.");
+    }
   } finally {
     btnHistorico.disabled = false;
     btnHistorico.textContent = "Ver evolución";

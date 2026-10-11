@@ -76,8 +76,10 @@ No requiere instalar dependencias, registrarse ni usar API key.
 - Aspecto bien resuelto: La lógica está separada en funciones con una responsabilidad clara (`convertirMoneda`, `intercambiarMonedas`, `consultarHistorico`, `dibujarGrafica`). El manejo de errores en la conversión usa `try/catch` y `response.ok`, y muestra mensajes comprensibles al usuario.
 - Error o comportamiento mejorable: En el histórico no se revisaba si la API respondió bien antes de usar los datos, así que cualquier problema muestra el mismo mensaje general. También había código repetido al cambiar la moneda de origen y la de destino.
 - Propuesta de mejora: Revisar que la respuesta de la API sea correcta también en el histórico, y juntar en uno solo el código repetido de los cambios de moneda.
-- Cambio incorporado después de la revisión:
+- Cambio incorporado después de la revisión: La consulta histórica ahora valida `response.ok` y la estructura de las tasas antes de construir la gráfica, y muestra mensajes específicos para errores de conexión o HTTP. Los cambios de moneda reutilizan una sola función para recalcular la conversión.
 
-## Reflexión final (150–200 palabras)
+## Reflexión final
 
-Explica el principal aprendizaje técnico, una dificultad relevante y una decisión que haya surgido del trabajo Driver/Navigator.
+Durante el desarrollo de esta aplicación, nuestro principal aprendizaje técnico se centró en la integración asíncrona de APIs REST con fetch(), el manejo de errores HTTP y el renderizado dinámico mediante Chart.js. Una experiencia clave fue usar por primera vez Live Share en VS Code. La herramienta resultó ser muy fácil e intuitiva de usar, aunque identificamos ciertas limitaciones para el usuario invitado.
+Un cambio importante que realizamos se dio al momento de graficar los datos, al inicio se hacía de una forma algo compleja, pero tomamos la decisión de aprovechar las herramientas disponibles utilizando una librería externa para facilitar el trabajo.
+Bajo la dinámica Driver/Navigator, estas restricciones nos exigieron una comunicación constante. Esta metodología nos permitió resolver las misiones con éxito, ya que el Navigator aportaba ideas, cuestionaba enfoques y sugería mejoras sobre la marcha, lo que nos permitió contrastar distintas perspectivas. Gracias a este choque de opiniones, logramos resolver las misiones.

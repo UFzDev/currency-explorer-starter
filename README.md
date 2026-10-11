@@ -33,6 +33,12 @@ Para la gráfica se usó la librería Chart.js:
 
 `https://www.chartjs.org/`
 
+## Evidencia de red
+
+Petición de conversión a Frankfurter (GET, status 200) vista en DevTools → Network:
+
+<img width="1012" height="535" alt="Captura de pantalla 2026-10-11 001656" src="https://github.com/user-attachments/assets/99d8e10c-274f-47e4-bb75-49cdb2f72380" />
+
 ## Instrucciones de ejecución
 
 No requiere instalar dependencias, registrarse ni usar API key.

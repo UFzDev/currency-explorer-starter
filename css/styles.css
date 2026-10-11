@@ -233,6 +233,22 @@ select:focus {
   font-size: 0.78rem;
 }
 
+.footer-note p {
+  margin: 4px 0;
+}
+
+.footer-note .repo-link {
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.footer-note .repo-link:hover {
+  color: var(--teal-dark);
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .hero,
   .panel {
